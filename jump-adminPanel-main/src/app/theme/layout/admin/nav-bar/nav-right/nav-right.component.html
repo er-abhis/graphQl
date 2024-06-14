@@ -1,0 +1,51 @@
+<ul class="navbar-nav">
+  <li>
+    <div class="dropdown drp-user" ngbDropdown placement="auto">
+      <span
+        ngbDropdownToggle
+        data-toggle="dropdown"
+        title="Profile"
+        class="curser"
+      >
+      Admin
+      </span>
+      <div
+        class="dropdown-menu dropdown-menu-end profile-notification"
+        ngbDropdownMenu
+      >
+        <div class="pro-head d-flex">
+          <span class="avatar-container">
+           Admin</span
+          >
+          <!-- @if (adminProfileData[0]?.profile_pic) {
+            <img
+              [src]="apiUrl + adminProfileData[0]?.profile_pic"
+              class="img-radius"
+            />
+          }
+          @if (adminProfileData[0]?.profile_pic == null) {
+            <span class="avatar-container">
+              {{ adminProfileData[0]?.firstName[0]
+              }}{{ adminProfileData[0]?.lastName[0] }}</span
+            >
+          } -->
+         
+            <span class="pt-2 mx-1">
+              Admin
+            </span>
+          
+          <span class="dud-logout curser" title="Logout" (click)="onLogout()">
+            <i class="feather icon-log-out"></i>
+          </span>
+        </div>
+        <ul class="pro-body">
+          <li>
+            <a href="javascript:" class="dropdown-item" routerLink="profile"
+              ><i class="feather icon-user"></i> Profile</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ul>

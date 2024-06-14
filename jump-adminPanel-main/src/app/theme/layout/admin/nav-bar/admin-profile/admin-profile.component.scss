@@ -1,0 +1,83 @@
+.gradient-custom {
+  /* fallback for old browsers */
+  background: #333f54;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(
+    to right bottom,
+    rgb(41, 58, 86),
+    rgb(35, 47, 109)
+  );
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(
+    to right bottom,
+    rgb(30, 44, 69),
+    rgb(75, 109, 175)
+  );
+}
+
+.left-side{
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  padding-top: 7%;
+}
+.avatar-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  overflow: hidden;
+
+  .span-content {
+    font-size: 30px;
+    font-weight: 600;
+    color: #333f54;
+    cursor: pointer;
+ 
+  }
+
+  .span-image {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+  .span-image .avatar-image {
+    border-radius: 50%;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    transition: 0.3s;
+    height: 100%;
+    object-fit: cover;
+  }
+  .span-image:hover .avatar-image {
+    display: none;
+  }
+
+  .span-image:hover .span-content{
+    display: none;
+  }
+
+  .span-image .hover-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    transition: 0.2s;
+  }
+  .span-image:hover .hover-image {
+    display: block;
+  }
+
+  .custom-badge {
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+}

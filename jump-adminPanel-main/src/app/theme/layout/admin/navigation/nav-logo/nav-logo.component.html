@@ -1,0 +1,20 @@
+<div>
+  <a [routerLink]="['/admin/users']" class="b-brand">
+    <div class="pt-3">
+      @if (envVar == "dev") {
+        <img
+          src="../../../../../../assets/images/blue_jump.png"
+          alt="logo"
+          width="50%"
+        />
+      }
+      @else {
+        <img
+          src="blue_jump.png"
+          alt="logo"
+          width="50%"
+        />
+      }
+    </div>
+  </a>
+</div>

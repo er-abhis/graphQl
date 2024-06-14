@@ -1,0 +1,54 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li
+      class="page-item"
+      (click)="previousSequence()"
+      title="previous sequence"
+    >
+      <a class="page-link" href="javascript:" aria-label="Previous">
+        <span aria-hidden="true">&laquo;&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+    <li
+      class="page-item"
+      (click)="previousPage()"
+      title="previous page"
+    >
+      <a class="page-link" href="javascript:" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+
+    
+    <ng-container *ngFor="let item of visiblePages(); index as i">
+      <li class="page-item" style="cursor: pointer">
+        <span
+          (click)="goToPage(visiblePageIndex(i))"
+          class="page-link"
+          [ngClass]="{'active-page': currentPage === visiblePageIndex(i) && activePage === visiblePageIndex(i)}"
+
+          >{{ visiblePageIndex(i) }}</span
+        >
+      </li>
+    </ng-container>
+
+    <li class="page-item" (click)="nextPage()" title="next page">
+      <a class="page-link" href="javascript:" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+    <li
+      class="page-item"
+      (click)="nextSequence()"
+      title="next sequence"
+    >
+      <a class="page-link" href="javascript:" aria-label="Next">
+        <span aria-hidden="true">&raquo;&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>

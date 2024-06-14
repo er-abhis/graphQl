@@ -1,0 +1,331 @@
+<div class="row">
+  <div class="col-xl-12">
+    <app-card [options]="false" blockClass="table-border-style">
+      <div class="d-flex justify-content-end pb-2">
+        <div class="mx-3">
+          <form [formGroup]="searchProduct">
+            <input
+              id="searchQueryInput"
+              type="text"
+              name="search"
+              formControlName="productName"
+              placeholder="Search"
+              value=""
+              tbSingleSpace
+            />
+            <button
+              id="searchQuerySubmit"
+              type="submit"
+              name="searchQuerySubmit"
+              (click)="clearSearchForm()"
+              *ngIf="searchProduct.get('productName').value !== ''"
+            >
+              <i class="feather icon-x"></i>
+            </button>
+          </form>
+        </div>
+        <!-- <button
+          type="button"
+          class="btn shadow-1 btn-sm"
+          style="background-color: #333f54; color: white"
+          (click)="downloadProductsAsCSV()"
+        >
+          <i class="feather icon-download"></i>
+          Export
+        </button> -->
+
+        <button
+          type="button"
+          class="btn shadow-1 btn-sm"
+          style="background-color: #333f54; color: white"
+          (click)="openAddProductModal()"
+        >
+          <i class="feather icon-product-plus"></i>
+          Add Product
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped product-table">
+          <thead class="table">
+            <tr>
+              <th scope="col">S.no</th>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th>Discount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          @if (!NoDataFound) {
+            <tbody>
+              <tr *ngFor="let product of allProducts; index as i" class="productRow">
+                <th class="sNo" scope="row">{{ i + 1 }}</th>
+                <td>{{ product?.description }}</td>
+                <td>{{ product?.price }}</td>
+                <td>{{ product?.discount }}</td>
+                <td>
+                  <app-action-icons
+                    [onEdit]="editProduct.bind(this, product)"
+                    [onDelete]="deleteProduct.bind(this, product._id, product.roles)"
+                    [onView]="viewProduct.bind(this, product)">
+                  </app-action-icons>
+                  
+                </td>
+              </tr>
+            </tbody>
+          }
+        </table>
+        <!-- PAGINATOR -->
+        <div class="d-flex justify-content-end mx-2">
+          @if (allProducts) {
+            <app-paginator
+              [totalPage]="totalPage"
+              [currentPage]="currentPage"
+              (pageChange)="goToPage($event)"
+            ></app-paginator>
+          }
+        </div>
+      </div>
+
+      <div>
+        @if (!allProducts) {
+          <app-nodata-found></app-nodata-found>
+        }
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<!-- ADD USER MODAL -->
+<ng-template #addProductModal let-modal>
+  <div class="modal-header" style="background-color: #333f54">
+    <h4 class="modal-title text-white">
+      {{ isEditMode ? "Edit Product" : "Add New Product" }}
+    </h4>
+  </div>
+  <form [formGroup]="addProductForm" (ngSubmit)="saveProduct()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-6" *ngFor="let field of formFields">
+          <ng-container
+            *ngIf="
+              !isEditMode ||
+              (isEditMode &&
+                field.controlName !== 'email' &&
+                field.controlName !== 'password')
+            "
+          >
+            <div class="mb-3">
+              <div class="form-group">
+                <label for="text">{{ field.label }}</label>
+                <input
+                  type="text"
+                  autocomplete="off"
+                  class="form-control"
+                  [required]="field.required"
+                  [formControlName]="field.controlName"
+                  [placeholder]="field.placeholder"
+                  [type]="field.type"
+                  tbSingleSpace
+                />
+              </div>
+              @if (
+                addProductForm.get(field.controlName)?.hasError("required") &&
+                (formSubmitted ||
+                  addProductForm.get(field.controlName).touched ||
+                  addProductForm.get(field.controlName).dirty)
+              ) {
+                <small class="error">
+                  {{ field.errorMsg }}
+                </small>
+              }
+
+              <div >
+                @if (
+                  field.controlName === "email" &&
+                  addProductForm.get("email").invalid &&
+                  addProductForm.get("email").touched
+                ) {
+                  <small class="error">{{ getEmailErrorMessage() }}</small>
+                }
+              </div>
+              <div >
+                @if (
+                  field.controlName === "password" &&
+                  addProductForm.get("password").invalid &&
+                  addProductForm.get("password").touched
+                ) {
+                  <small class="error">{{ getPasswordErrorMessage() }}</small>
+                }
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <!-- <div class="col-md-12">
+          <div class="form-group">
+            <label for="exampleFormControlTextarea1">About</label>
+            <textarea
+              class="form-control"
+              id="exampleFormControlTextarea1"
+              rows="3"
+              formControlName="aboutMe"
+              required=""
+              maxlength="200"
+              tbSingleSpace
+            ></textarea>
+          </div>
+          @if (
+            addProductForm.get("aboutMe")?.hasError("required") &&
+            (formSubmitted ||
+              addProductForm.get("aboutMe").touched ||
+              addProductForm.get("aboutMe").dirty)
+          ) {
+            <small class="error">About is required</small>
+          }
+        </div> -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn shadow-1 btn-sm"
+        (click)="closeMoadal()"
+        style="background-color: rgb(194, 49, 49); color: white"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn shadow-1 btn-sm"
+        style="background-color: #333f54; color: white"
+      >
+        {{ isEditMode ? "Update" : "Save" }}
+      </button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- VIEW PROFILE MODAL -->
+<ng-template #ProfileModal let-modal>
+  <div
+    class="modal-header d-flex justify-content-between"
+    style="background-color: #333f54"
+  >
+    <h4 class="modal-title text-white">Product Profile</h4>
+    <span class="icon-parent" (click)="closeMoadal()">
+      <i
+        class="feather icon-x cancel-icon"
+        style="color: white; cursor: pointer"
+      ></i>
+    </span>
+  </div>
+  <div>
+    <div class="container">
+      <div class="main-body">
+        <div class="row">
+          <div class="col-md-12 my-2">
+            <div class="card">
+              <div class="card-body">
+                <div
+                  class="example-button-container d-flex justify-content-end"
+                ></div>
+                <div class="d-flex flex-column align-items-center text-center">
+                  <div *ngIf="productProfile">
+                    <div
+                      *ngIf="productProfile?.profile_pic"
+                      class="span-image"
+                      id="image-container"
+                    >
+                      <img
+                        [src]="apiUrl + productProfile?.profile_pic"
+                        alt="Admin"
+                      />
+                    </div>
+                    <span
+                      *ngIf="productProfile?.profile_pic == null"
+                      class="avatar-container"
+                    >
+                      {{ productProfile.firstName[0] | uppercase
+                      }}{{ productProfile.lastName[0] | uppercase }}
+                    </span>
+                  </div>
+
+                  <div class="mt-3" *ngIf="productProfile">
+                    <h4>
+                      {{ productProfile.firstName | uppercase }}
+                      {{ productProfile.lastName | uppercase }}
+                    </h4>
+                    <h5 class="text-info text-capitalize fw-bold mb-0">
+                      {{ productProfile.positions }}
+                    </h5>
+                    <p class="text-muted mt-1 font-size-sm">
+                      {{ productProfile.aboutMe }}
+                    </p>
+                  </div>
+                </div>
+                <div class="row mt-3 productInfo" *ngIf="productProfile">
+                  <table class="profile_table">
+                    <tr>
+                      <th [width]="100"><h5>Email :</h5></th>
+                      <td>
+                        <h5>{{ productProfile.email }}</h5>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th [width]="100"><h5>Status :</h5></th>
+                      <td
+                        class="badge custom-badge"
+                        [style.backgroundColor]="
+                          productProfile.status === 'Active' ? 'green' : 'red'
+                        "
+                      >
+                        {{ productProfile.status }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th [width]="100"><h5>Verified :</h5></th>
+                      <td
+                        class=" custom-badge"
+                        [style.color]="
+                          productProfile.isVerified === true ? 'green' : 'red'
+                        "
+                      >
+                        {{
+                          productProfile.isVerified
+                            ? "✔️ Verified"
+                            : "❌ Not Verified "
+                        }}
+                      </td>
+                    </tr>
+                    <tr>
+                      <th [width]="150"><h5>Preferences :</h5></th>
+                      <td class="preferences">
+                        <span
+                          *ngFor="
+                            let compList of productProfile.comprensive_listings;
+                            index as i
+                          "
+                        >
+                          <span
+                            class="badge custom-badge mx-1"
+                            [ngClass]="getColorClass(i)"
+                            >{{ compList.name }}
+                          </span>
+                        </span>
+
+                        <span
+                          *ngIf="productProfile.comprensive_listings?.length == 0"
+                          >No Preferences
+                        </span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

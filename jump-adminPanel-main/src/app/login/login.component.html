@@ -1,0 +1,72 @@
+<div class="auth-wrapper">
+  <div class="auth-content">
+    <div class="auth-bg">
+      <span class="r"></span>
+      <span class="r s"></span>
+      <span class="r s"></span>
+      <span class="r"></span>
+    </div>
+    <div class="card">
+      <div class="card-body text-center">
+        <div class="mb-4">
+          @if (evnVar == "dev") {
+            <img src="../../assets/images/blue_jump.png" alt="logo" width="25%" />
+          } @else {
+            <img
+              src="blue_jump.png"
+              alt="logo"
+              width="25%"
+            />
+          }
+        </div>
+        <h3 class="mb-4">Login</h3>
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <div class="input-group">
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Email"
+              formControlName="email"
+              formControlName="email"
+              required
+            />
+          </div>
+          @if (
+            loginForm.get("email").invalid && loginForm.get("email").touched
+          ) {
+            <small class="error">{{ getEmailErrorMessage() }}</small>
+          }
+          <div class="input-group mt-3">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control"
+              placeholder="Password"
+              formControlName="password"
+              required
+            />
+          </div>
+          @if (
+            loginForm.get("password").invalid &&
+            loginForm.get("password").touched
+          ) {
+            <small class="error">{{ getPasswordErrorMessage() }}</small>
+          }
+          <div class="form-group text-start mt-4">
+            <div class="checkbox checkbox-fill d-inline">
+              <input
+                type="checkbox"
+                name="checkbox-fill-1"
+                id="checkbox-fill-a1"
+                required
+                (click)="show()"
+              />
+              <label for="checkbox-fill-a1" class="cr">Show Password</label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary my-4" type="submit">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

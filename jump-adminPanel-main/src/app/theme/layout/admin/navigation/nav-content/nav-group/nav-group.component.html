@@ -1,0 +1,9 @@
+@if (!item.hidden) {
+
+  @for (item of item.children; track item) {
+
+    @if (item.type == "item") {
+      <app-nav-item [item]="item"></app-nav-item>
+    }
+  }
+}

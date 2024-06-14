@@ -1,0 +1,117 @@
+<div class="row">
+  <div class="col-xl-12">
+    <app-card [options]="false" blockClass="table-border-style">
+      <div class="d-flex justify-content-end pb-2">
+        <button
+          type="button"
+          class="btn shadow-1 btn-sm"
+          style="background-color: #333f54; color: white"
+          (click)="openAddValueModal()"
+        >
+          <i class="feather icon-user-plus"></i>
+          Add Value
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead class="table">
+            <tr>
+              <th scope="col">S.no</th>
+              <th scope="col">Name</th>
+              <th scope="col">Created Date/Time</th>
+
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let value of allComprehensiveList; index as i">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ value.name }}</td>
+              <td>
+                {{ value.createdAt | date: "dd/MM/yyyy HH:mm:ss" }}
+              </td>
+
+              <td>
+                <app-action-icons
+                  [viewIcon]="false"
+                  [onEdit]="editValue.bind(this, value)"
+                  [onDelete]="deleteCompList.bind(this, value.id)"
+                >
+                </app-action-icons>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="d-flex justify-content-end mx-2">
+          @if (allComprehensiveList) {
+            <app-paginator
+              [totalPage]="totalPage"
+              [currentPage]="currentPage"
+              (pageChange)="goToPage($event)"
+            ></app-paginator>
+          }
+        </div>
+      </div>
+      <div>
+        @if (!allComprehensiveList) {
+          <app-nodata-found></app-nodata-found>
+        }
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<ng-template #addValueModal let-modal>
+  <div class="modal-header" style="background-color: #333f54">
+    <h4 class="modal-title text-white">
+      {{ isEditMode ? "Edit Value" : "Add New Value" }}
+    </h4>
+  </div>
+  <form [formGroup]="addnewValueForm" (ngSubmit)="saveCompList()">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <div class="form-group">
+            <label for="text">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="name"
+              formControlName="name"
+              tbSingleSpace
+            />
+          </div>
+          @if (
+            addnewValueForm.get("name").hasError("required") &&
+            (addnewValueForm.get("name").touched ||
+              addnewValueForm.get("name").dirty)
+          ) {
+            <small class="error">Name is required</small>
+          }
+          @if (addnewValueForm.get("name").hasError("maxlength")) {
+            <small class="error"
+              >Name should not be greater than 15 characters</small
+            >
+          }
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn shadow-1 btn-sm"
+        (click)="closeMoadal()"
+        style="background-color: rgb(194, 49, 49); color: white"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn shadow-1 btn-sm"
+        style="background-color: #333f54; color: white"
+      >
+        save
+      </button>
+    </div>
+  </form>
+</ng-template>
